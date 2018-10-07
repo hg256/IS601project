@@ -22,7 +22,6 @@ class main  {
  * Parameters: $records, Array used to obtain the CSV file content's key - value pair.
  * Result: traverse through $records array and Print an html table.
  */
-
 class html {
     public static function generateTable($records)
     {
@@ -59,7 +58,6 @@ class html {
  *         from start to end with the help of component tags as individual methods
  *         returned for each row.
  */
-
 class tablefactory{
     public static function addTable($attribute = "<table width='100%'>"){
         return $attribute;
@@ -91,7 +89,6 @@ class tablefactory{
  * Parameters: $filename, variable used to obtain the CSV file contents.
  * Result: return an array with CSV contents as key-value pair.
  */
-
 class csv {
     static public function getRecords($filename) {
         $file = fopen($filename,"r");
@@ -117,7 +114,6 @@ class csv {
  * Result: Calls the constructor on initialization to assign fieldNames and
  *         Values as key-value pair for each row of $Records Array.
  */
-
 class record {
     public function __construct(Array $fieldNames = null, $values = null )
     {
