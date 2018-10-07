@@ -26,12 +26,44 @@ class csv {
             if($count == 0) {
                 $fieldNames = $record;
             } else {
-                //Create records Array
+                $records[] = recordFactory::create($fieldNames, $record);
             }
             $count++;
         }
         fclose($file);
         return $records;
+    }
+}
+
+/* Description: Class to initialize a record value using a contructor to define the variables passed by reference
+ * Parameters: NA, Constructor is defined.
+ * Result: Calls the constructor on initialization to assign fieldNames and
+ *         Values as key-value pair for each row of $Records Array.
+ */
+
+class record {
+    public function __construct(Array $fieldNames = null, $values = null )
+    {
+        $record = array_combine($fieldNames, $values);
+        foreach ($record as $property => $value) {
+            $this->{$property} = $value;
+        }
+    }
+
+}
+
+/* Description: Class to initialize records Array when called from another class
+ * Parameters: $fieldNames, variable used to separate the CSV's headers from its values.
+ *             Takes first line as Header values and passes array $record back to class CSV with its properties.
+ * Parameters: $values, variable to assign CSV content for each row of data and return
+ *             the array $record back to class CSV with its properties.
+ * Result: Returns the Array $record by arranging the header and content values in key-value pair.
+ */
+
+class recordFactory {
+    public static function create(Array $fieldNames = null, Array $values = null) {
+        $record = new record($fieldNames, $values);
+        return $record;
     }
 }
 ?>
