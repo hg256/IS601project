@@ -1,3 +1,8 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
 <?php
 main::start("example.csv");
 /* Description: Class to initialize main
@@ -11,28 +16,73 @@ class main  {
     }
 }
 
+/* Description: Class to initialize records and construct a table
+ * Parameters: $records, Array used to obtain the CSV file content's key - value pair.
+ * Result: traverse through $records array and Print an html table.
+ */
+
 class html {
-    public static function generateTable($records) {
-        echo "<table width='100%'>" ;
+    public static function generateTable($records)
+    {
+        $tablestruct = tablefactory::addTable();
+
         $count = 1;
-        //foreach ($records as $arrays){
-        echo "<tr>";
+        $tablestruct .= tablefactory::addrow();
+
         foreach ($records[0] as $fields => $values) {
-            echo "<th>$fields</th>";
+            $tablestruct .= tablefactory::addTableHeaders($fields);
         }
-        echo "</tr>";
-        foreach ($records as $arrays){
-            if($count > 0) {
-                echo "<tr>";
+        $tablestruct .= tablefactory::endrow();
+
+        foreach ($records as $arrays) {
+            if ($count > 0) {
+                $tablestruct .= tablefactory::addrow();
                 foreach ($arrays as $fields => $values) {
-                    echo "<td>$values</td>";
+                    $tablestruct .= tablefactory::addcolumn($values);
                 }
-                echo "</tr>";
+                $tablestruct .= tablefactory::endrow();
             }
             $count++;
         }
-        echo "</table>";
+        $tablestruct .= tablefactory::endTable();
+        echo $tablestruct;
     }
+
+}
+
+/* Description: Class to pass values to individual table component tags
+ * Parameters: $fields, variable used to form header content
+ * Parameters: $values, variable used to bind data inside a column tag
+ * Result: This class serves as a utility/helper to generate HTML table
+ *         from start to end with the help of component tags as individual methods
+ *         returned for each row.
+ */
+
+class tablefactory{
+    public static function addTable($attribute = "<table width='100%'>"){
+        return $attribute;
+    }
+    public static function endTable($attribute = "</table>"){
+        return $attribute;
+    }
+    public static function addTableHeaders($fields){
+        $attribute = "<th>" . $fields . "</th>";
+        return $attribute;
+    }
+    public static function addrow($attribute = "<tr>"){
+        return $attribute;
+    }
+
+    public static function endrow($attribute = "</tr>"){
+        return $attribute;
+    }
+
+    public static function addcolumn($values){
+        $attribute = "<td>" . $values . "</td>";
+        return $attribute;
+    }
+
+
 }
 
 /* Description: Class to initialize records as key - value pair from CSV file
