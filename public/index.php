@@ -1,10 +1,17 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <title>CSV to Table Conversion</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
+<center>
 <h1>Dynamically Creating a Table from CSV File</h1>
+</center>
 <?php
 main::start("example.csv");
 /* Description: Class to initialize main
@@ -15,26 +22,28 @@ class main  {
     static public function start($filename) {
         $records = csv::getRecords($filename);
         $table = html::generateTable($records);
+        $displaytable = displaytable::display($table);
     }
 }
 
-/* Description: Class to initialize records and construct a table
+/* Description: Class to initialize records and construct a Bootstrap table
  * Parameters: $records, Array used to obtain the CSV file content's key - value pair.
- * Result: traverse through $records array and Print an html table.
+ * Result: traverse through $records array.
  */
 class html {
     public static function generateTable($records)
     {
-        $tablestruct = tablefactory::addTable();
-
+        $tablestruct = tablefactory::addDivContainer();
+        $tablestruct .= tablefactory::addTable();
         $count = 1;
+        $tablestruct .= tablefactory::addTableHeaders();
         $tablestruct .= tablefactory::addrow();
-
         foreach ($records[0] as $fields => $values) {
-            $tablestruct .= tablefactory::addTableHeaders($fields);
+            $tablestruct .= tablefactory::addTableHeaderTag($fields);
         }
         $tablestruct .= tablefactory::endrow();
-
+        $tablestruct .= tablefactory::endTableHeaders();
+        $tablestruct .= tablefactory::addTableBody();
         foreach ($records as $arrays) {
             if ($count > 0) {
                 $tablestruct .= tablefactory::addrow();
@@ -45,8 +54,10 @@ class html {
             }
             $count++;
         }
+        $tablestruct .= tablefactory::endTableBody();
         $tablestruct .= tablefactory::endTable();
-        echo $tablestruct;
+        $tablestruct .= tablefactory::endDivContainer();
+        return $tablestruct;
     }
 
 }
@@ -54,19 +65,38 @@ class html {
 /* Description: Class to pass values to individual table component tags
  * Parameters: $fields, variable used to form header content
  * Parameters: $values, variable used to bind data inside a column tag
- * Result: This class serves as a utility/helper to generate HTML table
+ * Result: This class serves as a utility/helper to generate Bootstrap table
  *         from start to end with the help of component tags as individual methods
  *         returned for each row.
  */
 class tablefactory{
-    public static function addTable($attribute = "<table width='100%'>"){
+
+    public static function addDivContainer($attribute = "<div class=\"container\">"){
+        return $attribute;
+    }
+    public static function endDivContainer($attribute = "</div>"){
+        return $attribute;
+    }
+    public static function addTable($attribute = "<table class=\"table table-striped\">"){
         return $attribute;
     }
     public static function endTable($attribute = "</table>"){
         return $attribute;
     }
-    public static function addTableHeaders($fields){
-        $attribute = "<th>" . $fields . "</th>";
+    public static function addTableHeaders($attribute = "<thead>"){
+        return $attribute;
+    }
+    public static function endTableHeaders($attribute = "</thead>"){
+        return $attribute;
+    }
+    public static function addTableBody($attribute = "<tbody>"){
+        return $attribute;
+    }
+    public static function endTableBody($attribute = "</tbody>"){
+        return $attribute;
+    }
+    public static function addTableHeaderTag($fields){
+        $attribute = "<th>" .$fields ."</th>";
         return $attribute;
     }
     public static function addrow($attribute = "<tr>"){
@@ -83,6 +113,25 @@ class tablefactory{
     }
 
 
+}
+
+/* Description: Class to validate if variable has value to print or not
+ * Parameters: $tablestruct, variable used to obtain the CSV file contents in Bootstrap Table format.
+ * Result: Print the table if variable is present else print a message.
+ */
+
+class displaytable
+{
+    public static function display($tablestruct)
+    {
+        if($tablestruct != null){
+            echo $tablestruct;
+        }
+        else{
+            echo "No data available to display currently! Please validate your CSV File";
+        }
+
+    }
 }
 
 /* Description: Class to initialize records as key - value pair from CSV file
