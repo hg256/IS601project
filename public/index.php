@@ -1,8 +1,10 @@
 <html>
 <head>
+    <title>CSV to Table Conversion</title>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+<h1>Dynamically Creating a Table from CSV File</h1>
 <?php
 main::start("example.csv");
 /* Description: Class to initialize main
