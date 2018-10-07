@@ -7,6 +7,31 @@ main::start("example.csv");
 class main  {
     static public function start($filename) {
         $records = csv::getRecords($filename);
+        $table = html::generateTable($records);
+    }
+}
+
+class html {
+    public static function generateTable($records) {
+        echo "<table width='100%'>" ;
+        $count = 1;
+        //foreach ($records as $arrays){
+        echo "<tr>";
+        foreach ($records[0] as $fields => $values) {
+            echo "<th>$fields</th>";
+        }
+        echo "</tr>";
+        foreach ($records as $arrays){
+            if($count > 0) {
+                echo "<tr>";
+                foreach ($arrays as $fields => $values) {
+                    echo "<td>$values</td>";
+                }
+                echo "</tr>";
+            }
+            $count++;
+        }
+        echo "</table>";
     }
 }
 
